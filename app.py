@@ -10,6 +10,7 @@ SENHA_INICIAL = "Imperial@2026"
 CORS(app, resources={r"/*": {"origins": [
     "https://avaimperial.netlify.app",
     "https://monumental-pothos-962d62.netlify.app"
+    ,"https://radiant-meerkat-bc6d61.netlify.app"
 ]}})
 
 
