@@ -10,6 +10,7 @@ ORIGENS_PERMITIDAS = {
     "https://avaimperial.netlify.app",
     "https://monumental-pothos-962d62.netlify.app",
     "https://radiant-meerkat-bc6d61.netlify.app",
+    "https://dncandrade.github.io",
 }
 
 @app.after_request
