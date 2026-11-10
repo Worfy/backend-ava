@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -7,11 +6,21 @@ app = Flask(__name__)
 DATABASE = "ava.db"
 SENHA_INICIAL = "Imperial@2026"
 
-CORS(app, resources={r"/*": {"origins": [
+ORIGENS_PERMITIDAS = {
     "https://avaimperial.netlify.app",
-    "https://monumental-pothos-962d62.netlify.app"
-    ,"https://radiant-meerkat-bc6d61.netlify.app"
-]}})
+    "https://monumental-pothos-962d62.netlify.app",
+    "https://radiant-meerkat-bc6d61.netlify.app",
+}
+
+@app.after_request
+def adicionar_cors(resposta):
+    origem = request.headers.get("Origin")
+    if origem in ORIGENS_PERMITIDAS:
+        resposta.headers["Access-Control-Allow-Origin"] = origem
+        resposta.headers["Vary"] = "Origin"
+        resposta.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        resposta.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return resposta
 
 
 def conectar():
@@ -133,8 +142,11 @@ def inicio():
     return jsonify({"mensagem": "Backend do AVA Imperial funcionando!", "status": "online"})
 
 
-@app.post("/login")
+@app.route("/login", methods=["POST", "OPTIONS"])
 def login():
+    if request.method == "OPTIONS":
+        return ("", 204)
+
     dados = request.get_json(silent=True) or {}
     identificador = (
         dados.get("identificador") or dados.get("email") or
