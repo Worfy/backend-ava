@@ -55,7 +55,8 @@ def criar_banco():
         "PRAGMA table_info(usuarios)"
     ).fetchall()}
     if "matricula" not in colunas:
-        conexao.execute("ALTER TABLE usuarios ADD COLUMN matricula TEXT UNIQUE")
+        conexao.execute("ALTER TABLE usuarios ADD COLUMN matricula TEXT")
+        conexao.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_usuarios_matricula ON usuarios(matricula)")
     if "curso" not in colunas:
         conexao.execute("ALTER TABLE usuarios ADD COLUMN curso TEXT")
 
